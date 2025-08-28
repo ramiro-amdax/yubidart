@@ -18,13 +18,13 @@ class GenerateKeyButton extends StatelessWidget {
             pin: "123456",
             managementKey: PivManagementKey.fromString(
               "010203040506070801020304050607080102030405060708",
-              keyType: PivManagementKeyType.tripleDES,
             ),
             pinPolicy: PivPinPolicy.defaultPolicy,
             type: PivKeyType.eccp256,
             touchPolicy: PivTouchPolicy.defaultPolicy,
             slot: PivSlot.signature,
           );
+
           return publicKey.toString();
         },
       );

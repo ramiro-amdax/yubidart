@@ -6,12 +6,12 @@ import 'package:yubidart/src/domain/model/piv/management_key_type.dart';
 class PivManagementKey {
   const PivManagementKey({
     required this.key,
-    required this.keyType,
+    this.keyType,
   });
 
   factory PivManagementKey.fromString(
     String key, {
-    required PivManagementKeyType keyType,
+    PivManagementKeyType? keyType,
   }) {
     if (key.length != 48) {
       throw YKFailure.invalidPIVManagementKey(
@@ -39,5 +39,5 @@ class PivManagementKey {
     );
   }
   final Uint8List key;
-  final PivManagementKeyType keyType;
+  final PivManagementKeyType? keyType;
 }

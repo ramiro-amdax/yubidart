@@ -22,7 +22,9 @@ dependencies:
   http: ^1.0.0
 
   # Flutter plugin for accessing the NFC features on Android and iOS.
-  nfc_manager: ^3.3.0
+  nfc_manager: ^4.0.2
+  nfc_manager_ndef: ^1.0.1
+  ndef_record: ^1.2.1
 
   # Nonce contains a static generator that generates random alphanumeric strings, and can be constructed as an object containing a generated string
   nonce: ^1.2.0

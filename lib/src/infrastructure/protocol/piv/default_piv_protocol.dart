@@ -28,7 +28,7 @@ class DefaultPivProtocol implements PivProtocol {
             <String, dynamic>{
               'pin': pin,
               'managementKey': managementKey.key,
-              'managementKeyType': managementKey.keyType.value,
+              'managementKeyType': managementKey.keyType?.value,
               'slot': slot.value,
               'type': type.value,
               'pinPolicy': pinPolicy.value,

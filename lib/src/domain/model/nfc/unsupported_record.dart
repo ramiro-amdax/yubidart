@@ -1,5 +1,7 @@
 // Package imports:
 import 'package:nfc_manager/nfc_manager.dart';
+import 'package:ndef_record/ndef_record.dart';
+
 // Project imports:
 import 'package:yubidart/src/domain/model/nfc/record.dart';
 
