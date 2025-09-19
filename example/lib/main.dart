@@ -4,6 +4,7 @@ import 'package:yubikit_android_example/components/capabilities_text.dart';
 import 'package:yubikit_android_example/components/generate_key_button.dart';
 import 'package:yubikit_android_example/components/piv_calculate_secret_button.dart';
 import 'package:yubikit_android_example/components/piv_read_cert_button.dart';
+import 'package:yubikit_android_example/components/piv_read_public_key_button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,6 +35,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 GenerateKeyButton(yubikitPlugin: _yubikitPlugin),
                 PivReadCertButton(yubikitPlugin: _yubikitPlugin),
+                PivReadPublicKeyButton(yubikitPlugin: _yubikitPlugin),
                 PivCalculateSecretButton(yubikitPlugin: _yubikitPlugin),
               ],
             ),
