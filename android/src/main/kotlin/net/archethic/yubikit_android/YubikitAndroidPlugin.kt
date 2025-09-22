@@ -17,11 +17,11 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import java.security.KeyFactory
+import java.security.KeyStore
+import java.security.PrivateKey
 import java.security.Signature
-import java.security.interfaces.ECPublicKey
-import java.security.spec.X509EncodedKeySpec
 import java.util.*
+
 
 /** YubikitAndroidPlugin */
 class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -70,7 +70,13 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
 
                 readYubiKey(result, pin) { pivSession ->
+                    val keyStore: KeyStore = KeyStore.getInstance("YKPiv");
+                    keyStore.load(null)
+                    val privateKey = keyStore.getKey("0x9c", "123456".toCharArray()) as PrivateKey
+
                     val signatureAlgorithm = Signature.getInstance("SHA256withECDSA")
+                    signatureAlgorithm.initSign(privateKey)
+                    signatureAlgorithm.update(message)
                     val secret =
                         pivSession.sign(slot, KeyType.ECCP256, message, signatureAlgorithm)
                     result.success(secret)
