@@ -18,6 +18,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.security.KeyFactory
+import java.security.Signature
 import java.security.interfaces.ECPublicKey
 import java.security.spec.X509EncodedKeySpec
 import java.util.*
@@ -57,17 +58,9 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         null -> null
                         else -> Slot.fromValue(rawSlot)
                     }
-                val peerPublicKey =
-                    when (val rawPeerPublicKey = arguments?.get("peerPublicKey") as? ByteArray
-                    ) {
-                        null -> null
-                        else ->
-                            KeyFactory.getInstance("EC")
-                                .generatePublic(X509EncodedKeySpec(rawPeerPublicKey)) as
-                                    ECPublicKey
-                    }
+                val message = arguments?.get("message") as? ByteArray
 
-                if (pin == null || slot == null || peerPublicKey == null) {
+                if (pin == null || slot == null || message == null) {
                     result.error(
                         YubikitError.dataError.code,
                         "Data or format error",
@@ -77,7 +70,9 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
 
                 readYubiKey(result, pin) { pivSession ->
-                    val secret = pivSession.calculateSecret(slot, peerPublicKey)
+                    val signatureAlgorithm = Signature.getInstance("SHA256withECDSA")
+                    val secret =
+                        pivSession.sign(slot, KeyType.ECCP256, message, signatureAlgorithm)
                     result.success(secret)
                 }
             }

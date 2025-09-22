@@ -60,7 +60,7 @@ abstract class PivProtocol {
   Future<Uint8List> calculateSecret({
     required String pin,
     required PivSlot slot,
-    required String peerPublicKey,
+    required Uint8List message,
   });
 
   /// Reads the X.509 certificate stored in the specified slot on the YubiKey

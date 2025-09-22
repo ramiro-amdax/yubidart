@@ -68,16 +68,14 @@ class DefaultPivProtocol implements PivProtocol {
   Future<Uint8List> calculateSecret({
     required PivSlot slot,
     required String pin,
-    required String peerPublicKey,
+    required Uint8List message,
   }) async {
     final result = await methodChannel.invokeMethod<Uint8List>(
       'pivCalculateSecret',
       <String, dynamic>{
         'slot': slot.value,
         'pin': pin,
-        'peerPublicKey': Uint8List.fromList(
-          PemCodec(PemLabel.publicKey).decode(peerPublicKey),
-        ),
+        'message': message,
       },
     );
     if (result == null) {
