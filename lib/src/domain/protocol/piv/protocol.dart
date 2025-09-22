@@ -62,4 +62,18 @@ abstract class PivProtocol {
     required PivSlot slot,
     required String peerPublicKey,
   });
+
+  /// Reads the X.509 certificate stored in the specified slot on the YubiKey
+  /// and extracts the public key from it.
+  ///
+  /// [pin] The pin. Default pin code is 123456.
+  /// [slot] : The slot where the certificate is stored.
+  ///
+  /// Returns the public key string.
+  ///
+  /// Throws a YKFailure
+  Future<Uint8List> getPublicKey({
+    required String pin,
+    required PivSlot slot,
+  });
 }

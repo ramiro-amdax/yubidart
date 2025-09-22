@@ -169,6 +169,35 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
             }
 
+            "pivGetPublicKey" -> {
+                val arguments = call.arguments as? HashMap<String, Any>
+                val pin = arguments?.get("pin") as? String
+                val slot =
+                    when (val rawSlot = arguments?.get("slot") as? Int) {
+                        null -> null
+                        else -> Slot.fromValue(rawSlot)
+                    }
+
+                if (pin == null || slot == null) {
+                    result.error(
+                        YubikitError.dataError.code,
+                        "Data or format error",
+                        call.arguments,
+                    )
+                    return
+                }
+
+                readYubiKey(result, pin) { pivSession ->
+                    val certificate = pivSession.getCertificate(slot)
+                    android.util.Log.d(
+                        "YubikitAndroidPlugin",
+                        "publicKey: ${certificate.publicKey.encoded}"
+                    )
+                    val publicKey = certificate.publicKey
+                    result.success(publicKey.encoded)
+                }
+            }
+
             else -> {
                 result.notImplemented()
             }
@@ -255,13 +284,16 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             )
 
             // Create intent filters for different NFC tag types
-            val techDiscoveredFilter = android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED)
-            val tagDiscoveredFilter = android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_TAG_DISCOVERED)
-            val ndefDiscoveredFilter = android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED)
-            
+            val techDiscoveredFilter =
+                android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED)
+            val tagDiscoveredFilter =
+                android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_TAG_DISCOVERED)
+            val ndefDiscoveredFilter =
+                android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED)
+
             // Add MIME type filters to catch NDEF tags with URLs
             ndefDiscoveredFilter.addDataType("*/*")
-            
+
             val filters = arrayOf(techDiscoveredFilter, tagDiscoveredFilter, ndefDiscoveredFilter)
 
             // Specify the technologies we want to handle
