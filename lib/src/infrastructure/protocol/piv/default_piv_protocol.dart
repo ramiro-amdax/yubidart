@@ -87,13 +87,13 @@ class DefaultPivProtocol implements PivProtocol {
   }
 
   @override
-  Future<String> getPublicKey({
+  Future<Uint8List> getPublicKey({
     required String pin,
     required PivSlot slot,
   }) async {
     final result = await YKFailure.guard(
       () async {
-        final result = await methodChannel.invokeMethod<String>(
+        final result = await methodChannel.invokeMethod<Uint8List>(
           'pivGetPublicKey',
           <String, dynamic>{
             'pin': pin,

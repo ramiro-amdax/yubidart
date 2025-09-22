@@ -194,46 +194,7 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         "publicKey: ${certificate.publicKey.encoded}"
                     )
                     val publicKey = certificate.publicKey
-                    if (publicKey is ECPublicKey) {
-                        val ecPoint = publicKey.w
-                        val x = ecPoint.affineX.toByteArray()
-                        val y = ecPoint.affineY.toByteArray()
-
-                        // Ensure both X and Y are 32 bytes (for secp256r1)
-                        val xPadded = ByteArray(32) { 0 }
-                        val yPadded = ByteArray(32) { 0 }
-                        System.arraycopy(
-                            x,
-                            Math.max(0, x.size - 32),
-                            xPadded,
-                            Math.max(0, 32 - x.size),
-                            Math.min(32, x.size)
-                        )
-                        System.arraycopy(
-                            y,
-                            Math.max(0, y.size - 32),
-                            yPadded,
-                            Math.max(0, 32 - y.size),
-                            Math.min(32, y.size)
-                        )
-
-                        // Combine into uncompressed EC point format
-                        val rawPublicKey = byteArrayOf(0x04) + xPadded + yPadded
-                        android.util.Log.d(
-                            "YubikitAndroidPlugin",
-                            "Raw EC Public Key (hex): ${
-                                rawPublicKey.joinToString(" ") {
-                                    "%02x".format(it)
-                                }
-                            }"
-                        )
-                        val base64PublicKey = Base64.getEncoder().encodeToString(rawPublicKey);
-                        android.util.Log.d(
-                            "YubikitAndroidPlugin",
-                            "Raw EC Public Key: $base64PublicKey"
-                        )
-                        result.success(base64PublicKey)
-                    }
+                    result.success(publicKey.encoded)
                 }
             }
 

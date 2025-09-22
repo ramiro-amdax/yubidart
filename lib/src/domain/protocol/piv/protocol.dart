@@ -72,7 +72,7 @@ abstract class PivProtocol {
   /// Returns the public key string.
   ///
   /// Throws a YKFailure
-  Future<String> getPublicKey({
+  Future<Uint8List> getPublicKey({
     required String pin,
     required PivSlot slot,
   });
