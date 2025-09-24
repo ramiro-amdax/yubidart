@@ -90,6 +90,8 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     signatureAlgorithm.update(message)
                     val isValid = signatureAlgorithm.verify(secret)
                     println("Signature valid: $isValid")
+                    // remove the provider when done
+                    Security.removeProvider(pivProvider.name)
 
                     result.success(secret)
                 }
