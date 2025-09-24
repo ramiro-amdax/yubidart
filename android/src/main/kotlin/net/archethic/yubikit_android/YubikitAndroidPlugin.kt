@@ -3,6 +3,7 @@ package net.archethic.yubikit_android
 import android.app.Activity
 import android.content.Context
 import android.nfc.NfcAdapter
+import android.util.Log
 import androidx.annotation.NonNull
 import com.yubico.yubikit.android.YubiKitManager
 import com.yubico.yubikit.android.transport.nfc.NfcConfiguration
@@ -10,6 +11,7 @@ import com.yubico.yubikit.android.transport.usb.UsbConfiguration
 import com.yubico.yubikit.core.smartcard.SW.*
 import com.yubico.yubikit.core.smartcard.SmartCardConnection
 import com.yubico.yubikit.piv.*
+import com.yubico.yubikit.piv.jca.PivProvider
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -19,6 +21,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.security.KeyStore
 import java.security.PrivateKey
+import java.security.Security
 import java.security.Signature
 import java.util.*
 
@@ -70,15 +73,24 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
 
                 readYubiKey(result, pin) { pivSession ->
+                    val pivProvider = PivProvider(pivSession)
+                    Security.insertProviderAt(pivProvider, 1)
+
                     val keyStore: KeyStore = KeyStore.getInstance("YKPiv");
                     keyStore.load(null)
-                    val privateKey = keyStore.getKey("0x9c", "123456".toCharArray()) as PrivateKey
+                    val privateKey = keyStore.getKey(slot.stringAlias, "123456".toCharArray()) as PrivateKey
+                    val publicKey = keyStore.getCertificate(slot.stringAlias).publicKey
 
                     val signatureAlgorithm = Signature.getInstance("SHA256withECDSA")
                     signatureAlgorithm.initSign(privateKey)
                     signatureAlgorithm.update(message)
                     val secret =
                         pivSession.sign(slot, KeyType.ECCP256, message, signatureAlgorithm)
+                    signatureAlgorithm.initVerify(publicKey)
+                    signatureAlgorithm.update(message)
+                    val isValid = signatureAlgorithm.verify(secret)
+                    println("Signature valid: $isValid")
+
                     result.success(secret)
                 }
             }
