@@ -36,7 +36,11 @@ class DefaultPivProtocol implements PivProtocol {
             },
           );
           if (result == null) {
-            throw YKFailure.other();
+            throw YKFailure.other(
+              code: 'NULL_RESULT',
+              message: 'pivGenerateKey returned null',
+              details: {'slot': slot.value},
+            );
           }
           return result;
         },
@@ -58,7 +62,11 @@ class DefaultPivProtocol implements PivProtocol {
           );
           log('result : ${json.encode(result)}');
           if (result == null) {
-            throw YKFailure.other();
+            throw YKFailure.other(
+              code: 'NULL_RESULT',
+              message: 'pivGetCertificate returned null',
+              details: {'slot': slot.value},
+            );
           }
           return result;
         },
@@ -70,18 +78,26 @@ class DefaultPivProtocol implements PivProtocol {
     required String pin,
     required Uint8List message,
   }) async {
-    final result = await methodChannel.invokeMethod<Uint8List>(
-      'pivCalculateSecret',
-      <String, dynamic>{
-        'slot': slot.value,
-        'pin': pin,
-        'message': message,
+    return YKFailure.guard(
+      () async {
+        final result = await methodChannel.invokeMethod<Uint8List>(
+          'pivCalculateSecret',
+          <String, dynamic>{
+            'slot': slot.value,
+            'pin': pin,
+            'message': message,
+          },
+        );
+        if (result == null) {
+          throw YKFailure.other(
+            code: 'NULL_RESULT',
+            message: 'pivCalculateSecret returned null',
+            details: {'slot': slot.value},
+          );
+        }
+        return result;
       },
     );
-    if (result == null) {
-      throw YKFailure.other();
-    }
-    return result;
   }
 
   @override
@@ -100,7 +116,11 @@ class DefaultPivProtocol implements PivProtocol {
         );
         log('result : ${json.encode(result)}');
         if (result == null) {
-          throw YKFailure.other();
+          throw YKFailure.other(
+            code: 'NULL_RESULT',
+            message: 'pivGetPublicKey returned null',
+            details: {'slot': slot.value},
+          );
         }
         return result;
       },

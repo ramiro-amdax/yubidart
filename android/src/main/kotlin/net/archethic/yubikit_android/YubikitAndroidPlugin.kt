@@ -78,7 +78,7 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     val keyStore: KeyStore = KeyStore.getInstance("YKPiv");
                     keyStore.load(null)
-                    val privateKey = keyStore.getKey(slot.stringAlias, "123456".toCharArray()) as PrivateKey
+                    val privateKey = keyStore.getKey(slot.stringAlias, pin.toCharArray()) as PrivateKey
                     val publicKey = keyStore.getCertificate(slot.stringAlias).publicKey
 
                     val signatureAlgorithm = Signature.getInstance("SHA256withECDSA")
@@ -204,7 +204,7 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 readYubiKey(result, pin) { pivSession ->
                     val certificate = pivSession.getCertificate(slot)
-                    android.util.Log.d(
+                    Log.d(
                         "YubikitAndroidPlugin",
                         "publicKey: ${certificate.publicKey.encoded}"
                     )

@@ -30,7 +30,17 @@ abstract class YKFailure implements Exception {
 
   factory YKFailure.invalidData() = InvalidData;
 
-  factory YKFailure.other() = OtherFailure;
+  static YKFailure other({
+    String? code,
+    String? message,
+    dynamic details,
+  }) {
+    return OtherFailure(
+      code: code,
+      message: message,
+      details: details,
+    );
+  }
 
   static Future<T> guard<T>(FutureOr<T> Function() run) async {
     try {
@@ -43,6 +53,8 @@ abstract class YKFailure implements Exception {
         stackTrace: stack,
       );
       throw e.toYKFailure();
+    } catch (e) {
+      throw YKFailure.other(message: e.toString());
     }
   }
 }
@@ -51,6 +63,7 @@ class InvalidPIVManagementKey extends YKFailure {
   const InvalidPIVManagementKey({
     this.message,
   });
+
   final String? message;
 }
 
@@ -62,6 +75,7 @@ class InvalidPin extends YKFailure {
   const InvalidPin({
     required this.remainingRetries,
   });
+
   final int remainingRetries;
 }
 
@@ -77,6 +91,7 @@ class UnsupportedOperation extends YKFailure {
   const UnsupportedOperation({
     this.message,
   });
+
   final String? message;
 }
 
@@ -93,5 +108,26 @@ class InvalidData extends YKFailure {
 }
 
 class OtherFailure extends YKFailure {
-  const OtherFailure();
+  const OtherFailure({
+    this.code,
+    this.message,
+    this.details,
+  });
+
+  factory OtherFailure.fromPlatformException(PlatformException e) {
+    return OtherFailure(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
+  final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'OtherFailure(code: $code, message: $message, details: $details)';
+  }
 }

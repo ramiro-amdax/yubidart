@@ -22,7 +22,8 @@ extension YKPlatformExceptionExt on PlatformException {
         return const SecurityConditionNotSatisfied();
       case 'DEVICE_ERROR':
         return const DeviceError();
+      default:
+        return OtherFailure.fromPlatformException(this);
     }
-    return const OtherFailure();
   }
 }
