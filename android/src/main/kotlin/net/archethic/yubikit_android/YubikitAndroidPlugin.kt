@@ -221,11 +221,11 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
-        disableNfcForegroundDispatch()
+//        disableNfcForegroundDispatch()
     }
 
     override fun onDetachedFromActivity() {
-        disableNfcForegroundDispatch()
+//        disableNfcForegroundDispatch()
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
@@ -237,7 +237,7 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        disableNfcForegroundDispatch()
+//        disableNfcForegroundDispatch()
     }
 
     private fun readYubiKey(
@@ -264,24 +264,24 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
         }
 
-        setupNfcForegroundDispatch()
-        val nfcConfig = NfcConfiguration().skipNdefCheck(true).timeout(5000)
-        yubikitManager.startNfcDiscovery(nfcConfig, activity) { device ->
-            device.requestConnection(SmartCardConnection::class.java) { connectionResult ->
-                guard(result) {
-                    val connection = connectionResult.getValue()
-                    val piv = PivSession(connection)
-                    piv.verifyPin(pin.toCharArray())
-                    doOnRead(piv)
-                    stopYubikeyDiscovery()
-                }
-            }
-        }
+//        setupNfcForegroundDispatch()
+//        val nfcConfig = NfcConfiguration().skipNdefCheck(true).timeout(5000)
+//        yubikitManager.startNfcDiscovery(nfcConfig, activity) { device ->
+//            device.requestConnection(SmartCardConnection::class.java) { connectionResult ->
+//                guard(result) {
+//                    val connection = connectionResult.getValue()
+//                    val piv = PivSession(connection)
+//                    piv.verifyPin(pin.toCharArray())
+//                    doOnRead(piv)
+//                    stopYubikeyDiscovery()
+//                }
+//            }
+//        }
     }
 
     private fun stopYubikeyDiscovery() {
         yubikitManager.stopUsbDiscovery()
-        yubikitManager.stopNfcDiscovery(activity)
+//        yubikitManager.stopNfcDiscovery(activity)
     }
 
     /**
