@@ -14,13 +14,13 @@ class PivManagementKey {
     PivManagementKeyType? keyType,
   }) {
     if (key.length != 48) {
-      throw YKFailure.invalidPIVManagementKey(
+      throw const InvalidPIVManagementKey(
         message: 'Key should be 48 characters length',
       );
     }
 
     if (key.contains(RegExp('[^a-fA-F0-9]'))) {
-      throw YKFailure.invalidPIVManagementKey(
+      throw const InvalidPIVManagementKey(
         message: 'Key should contain hexadecimal characters only',
       );
     }

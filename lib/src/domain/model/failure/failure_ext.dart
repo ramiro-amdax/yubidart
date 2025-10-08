@@ -5,23 +5,23 @@ extension YKPlatformExceptionExt on PlatformException {
   YKFailure toYKFailure() {
     switch (code) {
       case 'INVALID_DATA':
-        return const InvalidData();
+        return InvalidData.fromPlatformException(this);
       case 'ALREADY_CONNECTED':
-        return const AlreadyConnectedFailure();
+        return AlreadyConnectedFailure.fromPlatformException(this);
       case 'NOT_CONNECTED':
-        return const NotConnectedFailure();
+        return NotConnectedFailure.fromPlatformException(this);
       case 'UNSUPPORTED_OPERATION':
-        return UnsupportedOperation(message: message);
+        return UnsupportedOperation.fromPlatformException(this);
       case 'INVALID_PIN':
-        return InvalidPin(remainingRetries: details as int);
+        return InvalidPin.fromPlatformException(this);
       case 'INVALID_MANAGEMENT_KEY':
-        return InvalidPIVManagementKey(message: message);
+        return InvalidPIVManagementKey.fromPlatformException(this);
       case 'AUTH_METHOD_BLOCKED':
-        return const AuthMethodBlocked();
+        return AuthMethodBlocked.fromPlatformException(this);
       case 'SECURITY_CONDITION_NOT_SATISFIED':
-        return const SecurityConditionNotSatisfied();
+        return SecurityConditionNotSatisfied.fromPlatformException(this);
       case 'DEVICE_ERROR':
-        return const DeviceError();
+        return DeviceError.fromPlatformException(this);
       default:
         return OtherFailure.fromPlatformException(this);
     }

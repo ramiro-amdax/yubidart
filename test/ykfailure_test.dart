@@ -70,10 +70,9 @@ void main() {
           await _shouldTransformPlatforException(
             platformException: PlatformException(
               code: 'INVALID_PIN',
-              details: 3,
             ),
             exceptionMatcher: predicate(
-              (e) => e is InvalidPin && e.remainingRetries == 3,
+              (e) => e is InvalidPin,
             ),
           );
         },

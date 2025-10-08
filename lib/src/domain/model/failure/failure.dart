@@ -7,22 +7,16 @@ import 'package:yubidart/src/domain/model/failure/failure_ext.dart';
 abstract class YKFailure implements Exception {
   const YKFailure();
 
-  factory YKFailure.invalidPIVManagementKey({
-    String? message,
-  }) = InvalidPIVManagementKey;
+  factory YKFailure.invalidPIVManagementKey() = InvalidPIVManagementKey;
 
   factory YKFailure.securityConditionNotSatisfied() =
       SecurityConditionNotSatisfied;
 
-  factory YKFailure.invalidPin({
-    required int remainingRetries,
-  }) = InvalidPin;
+  factory YKFailure.invalidPin() = InvalidPin;
 
   factory YKFailure.authMethodBlocked() = AuthMethodBlocked;
 
-  factory YKFailure.unsupportedOperation({
-    String? message,
-  }) = UnsupportedOperation;
+  factory YKFailure.unsupportedOperation() = UnsupportedOperation;
 
   factory YKFailure.deviceError() = DeviceError;
 
@@ -47,7 +41,7 @@ abstract class YKFailure implements Exception {
       return await run();
     } on PlatformException catch (e, stack) {
       log(
-        'An error occured',
+        'An error occurred',
         name: 'Yubidart',
         error: e,
         stackTrace: stack,
@@ -61,50 +55,229 @@ abstract class YKFailure implements Exception {
 
 class InvalidPIVManagementKey extends YKFailure {
   const InvalidPIVManagementKey({
+    this.code,
     this.message,
+    this.details,
   });
 
+  factory InvalidPIVManagementKey.fromPlatformException(PlatformException e) {
+    return InvalidPIVManagementKey(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
   final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'InvalidPIVManagementKey(code: $code, message: $message, details: $details)';
+  }
 }
 
 class SecurityConditionNotSatisfied extends YKFailure {
-  const SecurityConditionNotSatisfied();
+  const SecurityConditionNotSatisfied({
+    this.code,
+    this.message,
+    this.details,
+  });
+
+  factory SecurityConditionNotSatisfied.fromPlatformException(
+    PlatformException e,
+  ) {
+    return SecurityConditionNotSatisfied(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
+  final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'SecurityConditionNotSatisfied(code: $code, message: $message, details: $details)';
+  }
 }
 
 class InvalidPin extends YKFailure {
   const InvalidPin({
-    required this.remainingRetries,
+    this.code,
+    this.message,
+    this.details,
   });
 
-  final int remainingRetries;
+  factory InvalidPin.fromPlatformException(PlatformException e) {
+    return InvalidPin(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
+  final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'InvalidPin(code: $code, message: $message, details: $details)';
+  }
 }
 
 class AuthMethodBlocked extends YKFailure {
-  const AuthMethodBlocked();
+  const AuthMethodBlocked({
+    this.code,
+    this.message,
+    this.details,
+  });
+
+  factory AuthMethodBlocked.fromPlatformException(PlatformException e) {
+    return AuthMethodBlocked(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
+  final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'AuthMethodBlocked(code: $code, message: $message, details: $details)';
+  }
 }
 
 class DeviceError extends YKFailure {
-  const DeviceError();
+  const DeviceError({
+    this.code,
+    this.message,
+    this.details,
+  });
+
+  factory DeviceError.fromPlatformException(PlatformException e) {
+    return DeviceError(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
+  final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'DeviceError(code: $code, message: $message, details: $details)';
+  }
 }
 
 class UnsupportedOperation extends YKFailure {
   const UnsupportedOperation({
+    this.code,
     this.message,
+    this.details,
   });
 
+  factory UnsupportedOperation.fromPlatformException(PlatformException e) {
+    return UnsupportedOperation(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
   final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'UnsupportedOperation(code: $code, message: $message, details: $details)';
+  }
 }
 
 class NotConnectedFailure extends YKFailure {
-  const NotConnectedFailure();
+  const NotConnectedFailure({
+    this.code,
+    this.message,
+    this.details,
+  });
+
+  factory NotConnectedFailure.fromPlatformException(PlatformException e) {
+    return NotConnectedFailure(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
+  final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'NotConnectedFailure(code: $code, message: $message, details: $details)';
+  }
 }
 
 class AlreadyConnectedFailure extends YKFailure {
-  const AlreadyConnectedFailure();
+  const AlreadyConnectedFailure({
+    this.code,
+    this.message,
+    this.details,
+  });
+
+  factory AlreadyConnectedFailure.fromPlatformException(PlatformException e) {
+    return AlreadyConnectedFailure(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
+  final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'AlreadyConnectedFailure(code: $code, message: $message, details: $details)';
+  }
 }
 
 class InvalidData extends YKFailure {
-  const InvalidData();
+  const InvalidData({
+    this.code,
+    this.message,
+    this.details,
+  });
+
+  factory InvalidData.fromPlatformException(PlatformException e) {
+    return InvalidData(
+      code: e.code,
+      message: e.message,
+      details: e.details,
+    );
+  }
+
+  final String? code;
+  final String? message;
+  final dynamic details;
+
+  @override
+  String toString() {
+    return 'InvalidData(code: $code, message: $message, details: $details)';
+  }
 }
 
 class OtherFailure extends YKFailure {
