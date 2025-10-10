@@ -17,11 +17,10 @@ class PivReadPublicKeyButton extends StatelessWidget {
       onPressed: () async {
         try {
           final publicKey = await yubikitPlugin.piv.getPublicKey(
-            pin: "123456",
             slot: PivSlot.signature,
           );
 
-          return publicKey;
+          return publicKey.toString();
         } on DeviceError catch (e) {
           print((e as DeviceError));
           return '';

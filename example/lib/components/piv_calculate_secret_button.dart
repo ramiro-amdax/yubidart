@@ -13,6 +13,7 @@ class PivCalculateSecretButton extends StatelessWidget {
   final Yubidart yubikitPlugin;
 
   static const String data = 'aGVsbG8=';
+  static const String pin = '123456';
 
   @override
   Widget build(BuildContext context) => ActionButton(
@@ -20,19 +21,18 @@ class PivCalculateSecretButton extends StatelessWidget {
         onPressed: () async {
           final secret = await yubikitPlugin.piv.calculateSecret(
             slot: PivSlot.signature,
-            pin: "123456",
+            pin: pin,
             message: utf8.encode(data),
           );
-          print('secret: $secret');
           // signature as hex
           final hexString = secret.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
-          print('hexString: $hexString');
+          print('PivCalculateSecretButton hexString: $hexString');
           // data as ascii
           final asciiString = String.fromCharCodes(secret);
-          print('asciiString: $asciiString');
+          print('PivCalculateSecretButton asciiString: $asciiString');
           // data as base64
           final base64String = base64Encode(secret);
-          print('base64String: $base64String');
+          print('PivCalculateSecretButton base64String: $base64String');
 
           return secret.toString();
         },

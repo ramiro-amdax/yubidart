@@ -78,7 +78,8 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     val keyStore: KeyStore = KeyStore.getInstance("YKPiv");
                     keyStore.load(null)
-                    val privateKey = keyStore.getKey(slot.stringAlias, pin.toCharArray()) as PrivateKey
+                    val privateKey =
+                        keyStore.getKey(slot.stringAlias, pin.toCharArray()) as PrivateKey
                     val publicKey = keyStore.getCertificate(slot.stringAlias).publicKey
 
                     val signatureAlgorithm = Signature.getInstance("SHA256withECDSA")
@@ -193,7 +194,7 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         else -> Slot.fromValue(rawSlot)
                     }
 
-                if (pin == null || slot == null) {
+                if (slot == null) {
                     result.error(
                         YubikitError.dataError.code,
                         "Data or format error",
@@ -242,7 +243,7 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun readYubiKey(
         result: Result,
-        pin: String,
+        pin: String?,
         doOnRead: (pivSession: PivSession) -> Unit
     ) {
         yubikitManager.startUsbDiscovery(UsbConfiguration()) { device ->
@@ -252,7 +253,10 @@ class YubikitAndroidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     guard(result) {
                         val connection = connectionResult.getValue()
                         val piv = PivSession(connection)
-                        piv.verifyPin(pin.toCharArray())
+                        if (pin != null) {
+                            piv.verifyPin(pin.toCharArray())
+                            Log.d("readYubiKey", "PIN verified")
+                        }
                         doOnRead(piv)
                         stopYubikeyDiscovery()
                     }
